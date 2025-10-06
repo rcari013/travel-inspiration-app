@@ -27,8 +27,7 @@ if (savedContainer) {
       if (country) {
         const html = await CountryInfo(country);
         document.querySelector("main section:nth-child(2)").innerHTML = html;
-        initPhotoLightbox(); // 👈 this enables the click-to-enlarge feature for saved countries
-
+        initPhotoLightbox();
       }
     }
 
@@ -43,44 +42,7 @@ if (savedContainer) {
   });
 }
 
-// ✅ 4. SEARCH HANDLER
-document.querySelector('.search-btn').addEventListener('click', async () => {
-  const query = document.querySelector('.search-box input').value.trim();
-
-  if (!query) {
-    alert("Please enter a country name");
-    return;
-  }
-
-  try {
-    const res = await fetch(`https://restcountries.com/v3.1/name/${query}?fullText=true`);
-    if (!res.ok) throw new Error("Country not found");
-    const data = await res.json();
-
-    const country = data[0];
-    const info = {
-      name: country.name.common,
-      capital: country.capital ? country.capital[0] : "N/A",
-      population: country.population.toLocaleString(),
-      languages: country.languages ? Object.values(country.languages).join(", ") : "N/A",
-      flag: country.flags.svg,
-      latlng: country.latlng
-    };
-
-    const html = await CountryInfo(info);
-    document.querySelector('main section:nth-child(2)').innerHTML = html;
-    initPhotoLightbox();
-  } catch (err) {
-    console.error(err);
-    document.querySelector('main section:nth-child(2)').innerHTML = `
-      <h2 id="country-info-title">Country Info</h2>
-      <div class="country-info">
-        <p style="color:red;">Country not found. Try again.</p>
-      </div>`;
-  }
-});
-
-// ✅ 5. AUTOSUGGEST HANDLER
+// ✅ 4. AUTOSUGGEST HANDLER
 const input = document.getElementById('country-input');
 const suggestions = document.getElementById('suggestions');
 
@@ -107,8 +69,7 @@ input.addEventListener('input', async () => {
   }
 });
 
-
-// ✅ 6. CLICK AUTOSUGGEST OPTION (with loading overlay)
+// ✅ 5. CLICK AUTOSUGGEST OPTION (with loading overlay)
 suggestions.addEventListener('click', async (e) => {
   if (e.target.tagName === 'LI') {
     const selectedCountry = e.target.dataset.country;
@@ -116,7 +77,7 @@ suggestions.addEventListener('click', async (e) => {
     suggestions.innerHTML = '';
     suggestions.classList.remove('active');
 
-    showLoading(); // 👈 show blue overlay before fetching
+    showLoading();
     try {
       const res = await fetch(`https://restcountries.com/v3.1/name/${selectedCountry}?fullText=true`);
       if (!res.ok) throw new Error("Country not found");
@@ -143,52 +104,94 @@ suggestions.addEventListener('click', async (e) => {
           <p style="color:red;">Country not found. Try again.</p>
         </div>`;
     } finally {
-      hideLoading(); // 👈 hide blue overlay when done
+      hideLoading();
     }
   }
 });
 
+// ✅ 6. EVENT DELEGATION for SEARCH + RANDOM BUTTONS
+document.addEventListener('click', async (e) => {
+  // --- SEARCH HANDLER ---
+  if (e.target.classList.contains('search-btn')) {
+    const query = document.querySelector('.search-box input').value.trim();
+    if (!query) {
+      alert("Please enter a country name");
+      return;
+    }
 
-// ✅ 7. RANDOM COUNTRY HANDLER
-document.querySelector('.random-btn').addEventListener('click', async () => {
-  const region = document.querySelector('#region-select').value;
+    showLoading();
+    try {
+      const res = await fetch(`https://restcountries.com/v3.1/name/${query}?fullText=true`);
+      if (!res.ok) throw new Error("Country not found");
+      const data = await res.json();
 
-  try {
-    const res = await fetch(`https://restcountries.com/v3.1/region/${region}`);
-    if (!res.ok) throw new Error("Region not found");
-    const countries = await res.json();
+      const country = data[0];
+      const info = {
+        name: country.name.common,
+        capital: country.capital ? country.capital[0] : "N/A",
+        population: country.population.toLocaleString(),
+        languages: country.languages ? Object.values(country.languages).join(", ") : "N/A",
+        flag: country.flags.svg,
+        latlng: country.latlng
+      };
 
-    const randomCountry = countries[Math.floor(Math.random() * countries.length)];
+      const html = await CountryInfo(info);
+      document.querySelector('main section:nth-child(2)').innerHTML = html;
+      initPhotoLightbox();
+    } catch (err) {
+      console.error(err);
+      document.querySelector('main section:nth-child(2)').innerHTML = `
+        <h2 id="country-info-title">Country Info</h2>
+        <div class="country-info">
+          <p style="color:red;">Country not found. Try again.</p>
+        </div>`;
+    } finally {
+      hideLoading();
+    }
+  }
 
-    const info = {
-      name: randomCountry.name.common,
-      capital: randomCountry.capital ? randomCountry.capital[0] : "N/A",
-      population: randomCountry.population.toLocaleString(),
-      languages: randomCountry.languages ? Object.values(randomCountry.languages).join(", ") : "N/A",
-      flag: randomCountry.flags.svg,
-      latlng: randomCountry.latlng
-    };
+  // --- RANDOM COUNTRY HANDLER ---
+  if (e.target.classList.contains('random-btn')) {
+    const region = document.querySelector('#region-select').value;
 
-    const html = await CountryInfo(info);
-    document.querySelector('main section:nth-child(2)').innerHTML = html;
-    initPhotoLightbox();
-  } catch (err) {
-    console.error(err);
-    document.querySelector('main section:nth-child(2)').innerHTML = `
-      <h2 id="country-info-title">Country Info</h2>
-      <div class="country-info">
-        <p style="color:red;">Could not load random country.</p>
-      </div>`;
+    showLoading();
+    try {
+      const res = await fetch(`https://restcountries.com/v3.1/region/${region}`);
+      if (!res.ok) throw new Error("Region not found");
+      const countries = await res.json();
+
+      const randomCountry = countries[Math.floor(Math.random() * countries.length)];
+
+      const info = {
+        name: randomCountry.name.common,
+        capital: randomCountry.capital ? randomCountry.capital[0] : "N/A",
+        population: randomCountry.population.toLocaleString(),
+        languages: randomCountry.languages ? Object.values(randomCountry.languages).join(", ") : "N/A",
+        flag: randomCountry.flags.svg,
+        latlng: randomCountry.latlng
+      };
+
+      const html = await CountryInfo(info);
+      document.querySelector('main section:nth-child(2)').innerHTML = html;
+      initPhotoLightbox();
+    } catch (err) {
+      console.error(err);
+      document.querySelector('main section:nth-child(2)').innerHTML = `
+        <h2 id="country-info-title">Country Info</h2>
+        <div class="country-info">
+          <p style="color:red;">Could not load random country.</p>
+        </div>`;
+    } finally {
+      hideLoading();
+    }
   }
 });
 
 // === Click-to-enlarge photos (Dynamic Rebinding) ===
 function initPhotoLightbox() {
-  // Remove old overlay if it exists (avoid duplicates)
   const existingOverlay = document.querySelector(".photo-overlay");
   if (existingOverlay) existingOverlay.remove();
 
-  // Create overlay container
   let overlay = document.createElement("div");
   overlay.className = "photo-overlay";
   overlay.innerHTML = `
@@ -196,14 +199,12 @@ function initPhotoLightbox() {
     <span class="close-btn">&times;</span>
     <img src="" alt="Zoomed Photo">
   </div>
-`;
-
+  `;
   document.body.appendChild(overlay);
 
   const overlayImg = overlay.querySelector("img");
   const closeBtn = overlay.querySelector(".close-btn");
 
-  // Attach events to all current photos
   document.querySelectorAll(".photos img").forEach(img => {
     img.addEventListener("click", () => {
       overlayImg.src = img.src;
@@ -211,18 +212,14 @@ function initPhotoLightbox() {
     });
   });
 
-  // Close actions
   closeBtn.addEventListener("click", () => overlay.classList.remove("active"));
   overlay.addEventListener("click", (e) => {
     if (e.target === overlay) overlay.classList.remove("active");
   });
-
-  // Optional: Close on ESC key
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") overlay.classList.remove("active");
   });
 }
-
 
 // === LOADING OVERLAY ===
 const loadingOverlay = document.getElementById("loading-overlay");
@@ -232,79 +229,3 @@ function showLoading() {
 function hideLoading() {
   loadingOverlay.classList.add("hidden");
 }
-
-// ✅ SEARCH HANDLER
-document.querySelector('.search-btn').addEventListener('click', async () => {
-  const query = document.querySelector('.search-box input').value.trim();
-
-  if (!query) {
-    alert("Please enter a country name");
-    return;
-  }
-
-  showLoading(); // 👈 SHOW BLUE OVERLAY HERE
-  try {
-    const res = await fetch(`https://restcountries.com/v3.1/name/${query}?fullText=true`);
-    if (!res.ok) throw new Error("Country not found");
-    const data = await res.json();
-
-    const country = data[0];
-    const info = {
-      name: country.name.common,
-      capital: country.capital ? country.capital[0] : "N/A",
-      population: country.population.toLocaleString(),
-      languages: country.languages ? Object.values(country.languages).join(", ") : "N/A",
-      flag: country.flags.svg,
-      latlng: country.latlng
-    };
-
-    const html = await CountryInfo(info);
-    document.querySelector('main section:nth-child(2)').innerHTML = html;
-    initPhotoLightbox();
-  } catch (err) {
-    console.error(err);
-    document.querySelector('main section:nth-child(2)').innerHTML = `
-      <h2 id="country-info-title">Country Info</h2>
-      <div class="country-info">
-        <p style="color:red;">Country not found. Try again.</p>
-      </div>`;
-  } finally {
-    hideLoading(); // 👈 HIDE BLUE OVERLAY WHEN DONE
-  }
-});
-
-// ✅ RANDOM COUNTRY HANDLER
-document.querySelector('.random-btn').addEventListener('click', async () => {
-  const region = document.querySelector('#region-select').value;
-
-  showLoading(); // 👈 SHOW BLUE OVERLAY
-  try {
-    const res = await fetch(`https://restcountries.com/v3.1/region/${region}`);
-    if (!res.ok) throw new Error("Region not found");
-    const countries = await res.json();
-
-    const randomCountry = countries[Math.floor(Math.random() * countries.length)];
-
-    const info = {
-      name: randomCountry.name.common,
-      capital: randomCountry.capital ? randomCountry.capital[0] : "N/A",
-      population: randomCountry.population.toLocaleString(),
-      languages: randomCountry.languages ? Object.values(randomCountry.languages).join(", ") : "N/A",
-      flag: randomCountry.flags.svg,
-      latlng: randomCountry.latlng
-    };
-
-    const html = await CountryInfo(info);
-    document.querySelector('main section:nth-child(2)').innerHTML = html;
-    initPhotoLightbox();
-  } catch (err) {
-    console.error(err);
-    document.querySelector('main section:nth-child(2)').innerHTML = `
-      <h2 id="country-info-title">Country Info</h2>
-      <div class="country-info">
-        <p style="color:red;">Could not load random country.</p>
-      </div>`;
-  } finally {
-    hideLoading(); // 👈 HIDE BLUE OVERLAY WHEN DONE
-  }
-});
