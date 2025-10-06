@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Waving Flag Test</title>
+  <style>
+    body {
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+.flag {
+  width: 300px;
+  height: 180px;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+
+    .flag-element {
+      -webkit-animation: oscill 2s ease-in-out infinite alternate;
+      -moz-animation: oscill 2s ease-in-out infinite alternate;
+      -ms-animation: oscill 2s ease-in-out infinite alternate;
+      animation: oscill 0.7s ease-in-out infinite alternate;
+
+      background: url("https://flagcdn.com/w320/us.png"); /* ✅ Replace with your flag image */
+      background-size: 300px 180px;
+      position: absolute;
+      height: 100%;
+      display: inline-block;
+    }
+
+    @-webkit-keyframes oscill {
+      100% { transform: translateY(3px); }
+    }
+    @-moz-keyframes oscill {
+      100% { transform: translateY(3px) rotate(0.01deg); }
+    }
+    @-ms-keyframes oscill {
+      100% { transform: translateY(3px); }
+    }
+    @keyframes oscill {
+      100% { transform: translateY(3px) rotate(0.01deg); }
+    }
+  </style>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <div class="flag"></div>
+
+  <script>
+    $(window).on('load', function () {
+      var w = $('.flag').width();   // total flag width
+      var sliceWidth = 4;           // width of each slice (smaller = smoother wave)
+      var slices = Math.floor(w / sliceWidth);
+
+      for (var i = 0; i < slices; i++) {
+        var flagElement = $("<div class='flag-element'></div>");
+        flagElement.css({
+          'width': sliceWidth + 'px',
+          'left': (i * sliceWidth) + 'px',
+          'background-position': -(i * sliceWidth) + 'px 0',
+          '-webkit-animation-delay': (i * 50) + 'ms',
+          '-moz-animation-delay': (i * 50) + 'ms',
+          '-ms-animation-delay': (i * 50) + 'ms',
+          'animation-delay': (i * 50) + 'ms'
+        });
+        $('.flag').append(flagElement);
+      }
+    });
+  </script>
+</body>
+</html>

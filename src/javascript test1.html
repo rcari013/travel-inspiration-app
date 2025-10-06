@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Letter Pattern with Division Result</title>
+</head>
+<body>
+  <pre id="output"></pre>
+
+  <script>
+    let output = "";
+    let max_row = 9;
+    let number = 1;         // current row number we’ll divide
+
+    let result = 0;         // holds division result
+
+    // loop through each row
+    for (let row = 1; row <= max_row; row++) {
+      
+      // divide number by 2 and store result
+      result = number / 2;
+
+      // show the computed value
+      
+
+      // decide which letter to print using odd/even logic
+      if (row % 2 == 0) {
+        // even rows → B
+        for (let col = 1; col <= row; col++) {
+          output = output + "B ";
+        }
+      } else {
+        // odd rows → A
+        for (let col = 1; col <= row; col++) {
+          output = output + "A ";
+        }
+      }
+
+      // move to next line
+      output = output + "\n"; // extra newline for spacing
+
+      // increment the number for next round
+      number++;
+    }
+
+    // show result in the <pre> tag
+    document.getElementById("output").textContent = output;
+  </script>
+</body>
+</html>
