@@ -1,0 +1,133 @@
+/* === PHOTO GRID === */
+.photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* === PHOTO ITEM === */
+.photo-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.photo-item img {
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Overlay effect */
+.photo-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.65);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  border-radius: 6px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Hover label */
+.photo-item::after {
+  content: "Click to enlarge";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #000;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  z-index: 2;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.photo-item:hover img {
+  transform: scale(1.08);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.photo-item:hover::before,
+.photo-item:hover::after {
+  opacity: 1;
+}
+
+/* === LIGHTBOX OVERLAY === */
+.photo-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  overflow: auto;
+}
+
+.photo-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.photo-overlay .photo-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.photo-overlay img {
+  max-width: 95vw;
+  max-height: 90vh;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  animation: zoomIn 0.3s ease;
+  object-fit: contain;
+  display: block;
+}
+
+/* Close button */
+.photo-overlay .close-btn {
+  position: absolute;
+  top: -35px;
+  right: -20px;
+  font-size: 2rem;
+  color: white;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s ease, transform 0.2s ease;
+  text-shadow: 0 0 6px rgba(0,0,0,0.7);
+}
+
+.photo-overlay .close-btn:hover {
+  color: #ffcc00;
+  transform: scale(1.2);
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.85); opacity: 0.6; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 1080px) {
+  .photo-overlay .close-btn {
+    top: -35px;
+    right: 10px;
+    font-size: 2rem;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+  }
+}

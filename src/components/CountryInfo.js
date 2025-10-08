@@ -1,5 +1,7 @@
 import { fetchPhotos } from "../api/Unsplash.js";
 import SavedList from "./SavedList.js";
+import { initMapScrollControl } from "../functions/initMapScrollControl.js";
+
 
 export default async function CountryInfo(country = null) {
   if (!country) {
@@ -13,9 +15,15 @@ export default async function CountryInfo(country = null) {
 
   const photos = await fetchPhotos(country.name);
 
-  const photoHTML = photos.length
-    ? photos.map((url, i) => `<img src="${url}" alt="${country.name} photo ${i + 1}">`).join("")
-    : `<p>No photos available</p>`;
+  const photoHTML = photos.map(
+    (url, i) => `
+      <div class="photo-item">
+        <img src="${url}" alt="${country.name} photo ${i + 1}">
+      </div>
+    `
+  ).join("");
+
+
 
   const [lat, lon] = country.latlng || [0, 0];
 
@@ -32,7 +40,7 @@ export default async function CountryInfo(country = null) {
     </div>
     <div class="map">
       <h3>Map</h3>
-      <div id="map" style="height:400px; width:90%;"></div>
+      <div id="map"></div>
     </div>
 
     <h3 id="photos-title">Photos</h3>
@@ -40,9 +48,11 @@ export default async function CountryInfo(country = null) {
       ${photoHTML}
     </div>
 
-    <div id="save-button-section">
-      <button id="save-destination-btn">Save On Destination List</button>
-    </div>
+<div id="save-button-section">
+  <button id="more-info-button" class="info-btn">More Info</button>
+  <button id="save-destination-btn">Save On Destination List</button>
+</div>
+
   `;
 
   // delay so #map div + flag div exist
@@ -63,6 +73,7 @@ export default async function CountryInfo(country = null) {
       L.marker([lat, lon]).addTo(map)
         .bindPopup(`<b>${country.name}</b><br>Capital: ${country.capital}`)
         .openPopup();
+      initMapScrollControl(map);
     }
 
     // === Waving flag ===
@@ -100,6 +111,21 @@ export default async function CountryInfo(country = null) {
       }
     }
   }
+        // === More Info button ===
+    const infoBtn = document.getElementById("more-info-button");
+    if (infoBtn) {
+      infoBtn.addEventListener("click", async () => {
+        const { default: CountryMoreInfo } = await import("../pages/CountryMoreInfo.js");
+        const html = await CountryMoreInfo(country.name);
+        document.querySelector("main section:nth-child(2)").innerHTML = html;
+
+        // Add back button functionality
+        document.getElementById("back-btn").addEventListener("click", async () => {
+          const html = await CountryInfo(country);
+          document.querySelector("main section:nth-child(2)").innerHTML = html;
+        });
+      });
+    }
 
 
     // === Save button ===
