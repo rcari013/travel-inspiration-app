@@ -1,7 +1,7 @@
 import { fetchPhotos } from "../api/Unsplash.js";
 import SavedList from "./SavedList.js";
+import { initPhotoLightbox } from "../functions/initPhotoLightbox.js";
 import { initMapScrollControl } from "../functions/initMapScrollControl.js";
-
 
 export default async function CountryInfo(country = null) {
   if (!country) {
@@ -22,8 +22,6 @@ export default async function CountryInfo(country = null) {
       </div>
     `
   ).join("");
-
-
 
   const [lat, lon] = country.latlng || [0, 0];
 
@@ -48,20 +46,16 @@ export default async function CountryInfo(country = null) {
       ${photoHTML}
     </div>
 
-<div id="save-button-section">
-  <button id="more-info-button" class="info-btn">More Info</button>
-  <button id="save-destination-btn">Save On Destination List</button>
-</div>
-
+    <div id="save-button-section">
+      <button id="more-info-button" class="info-btn">More Info</button>
+      <button id="save-destination-btn">Save On Destination List</button>
+    </div>
   `;
 
-  // delay so #map div + flag div exist
   setTimeout(() => {
     // === Map ===
     if (lat && lon) {
-      if (window._mapInstance) {
-        window._mapInstance.remove();
-      }
+      if (window._mapInstance) window._mapInstance.remove();
 
       const map = L.map("map").setView([lat, lon], 5);
       window._mapInstance = map;
@@ -70,48 +64,47 @@ export default async function CountryInfo(country = null) {
         attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
       }).addTo(map);
 
-      L.marker([lat, lon]).addTo(map)
+      L.marker([lat, lon])
+        .addTo(map)
         .bindPopup(`<b>${country.name}</b><br>Capital: ${country.capital}`)
         .openPopup();
+
       initMapScrollControl(map);
     }
 
     // === Waving flag ===
-// === Waving flag (with auto-detect for simple flags) ===
-  const flagContainer = document.querySelector(".flag");
-  if (flagContainer) {
-    const flagUrl = flagContainer.dataset.flag;
-    flagContainer.innerHTML = "";
+    const flagContainer = document.querySelector(".flag");
+    if (flagContainer) {
+      const flagUrl = flagContainer.dataset.flag;
+      flagContainer.innerHTML = "";
 
-    // Detect flags that don't work well with slicing
-    const simpleFlags = ["Japan", "Switzerland", "South Korea", "Bangladesh", "Palau"];
-    const isSimpleFlag = simpleFlags.some(name =>
-      country.name.toLowerCase().includes(name.toLowerCase())
-    );
+      const simpleFlags = ["Japan", "Switzerland", "South Korea", "Bangladesh", "Palau"];
+      const isSimpleFlag = simpleFlags.some(name =>
+        country.name.toLowerCase().includes(name.toLowerCase())
+      );
 
-    if (isSimpleFlag) {
-      // Use a flat, static flag with subtle shadow
-      flagContainer.style.background = `url(${flagUrl}) center/cover no-repeat`;
-      flagContainer.style.boxShadow = "0 6px 12px rgba(0, 0, 0, 0.25)";
-      flagContainer.style.borderRadius = "6px";
-    } else {
-      // Normal waving slice effect
-      const w = flagContainer.offsetWidth;
-      const sliceWidth = 4;
-      const slices = Math.floor(w / sliceWidth);
-      for (let i = 0; i < slices; i++) {
-        const slice = document.createElement("div");
-        slice.className = "flag-element";
-        slice.style.width = sliceWidth + "px";
-        slice.style.left = (i * sliceWidth) + "px";
-        slice.style.backgroundImage = `url(${flagUrl})`;
-        slice.style.backgroundPosition = `-${i * sliceWidth}px 0`;
-        slice.style.animationDelay = (i * 50) + "ms";
-        flagContainer.appendChild(slice);
+      if (isSimpleFlag) {
+        flagContainer.style.background = `url(${flagUrl}) center/cover no-repeat`;
+        flagContainer.style.boxShadow = "0 6px 12px rgba(0, 0, 0, 0.25)";
+        flagContainer.style.borderRadius = "6px";
+      } else {
+        const w = flagContainer.offsetWidth;
+        const sliceWidth = 4;
+        const slices = Math.floor(w / sliceWidth);
+        for (let i = 0; i < slices; i++) {
+          const slice = document.createElement("div");
+          slice.className = "flag-element";
+          slice.style.width = sliceWidth + "px";
+          slice.style.left = i * sliceWidth + "px";
+          slice.style.backgroundImage = `url(${flagUrl})`;
+          slice.style.backgroundPosition = `-${i * sliceWidth}px 0`;
+          slice.style.animationDelay = i * 50 + "ms";
+          flagContainer.appendChild(slice);
+        }
       }
     }
-  }
-        // === More Info button ===
+
+    // === More Info button ===
     const infoBtn = document.getElementById("more-info-button");
     if (infoBtn) {
       infoBtn.addEventListener("click", async () => {
@@ -119,14 +112,14 @@ export default async function CountryInfo(country = null) {
         const html = await CountryMoreInfo(country.name);
         document.querySelector("main section:nth-child(2)").innerHTML = html;
 
-        // Add back button functionality
+        // ✅ Back button functionality with photo reinit
         document.getElementById("back-btn").addEventListener("click", async () => {
           const html = await CountryInfo(country);
           document.querySelector("main section:nth-child(2)").innerHTML = html;
+          initPhotoLightbox(); // ✅ Rebind lightbox after back
         });
       });
     }
-
 
     // === Save button ===
     const saveBtn = document.getElementById("save-destination-btn");
@@ -153,35 +146,13 @@ export default async function CountryInfo(country = null) {
         const savedContainer = document.getElementById("saved-destinations");
         if (savedContainer) {
           savedContainer.innerHTML = SavedList(saved);
-
-          // re-attach listeners
-          savedContainer.querySelectorAll(".saved-link").forEach(link => {
-            link.addEventListener("click", async (e) => {
-              e.preventDefault();
-              const countryName = e.target.dataset.country;
-
-              const saved = JSON.parse(localStorage.getItem("savedDestinations")) || [];
-              const country = saved.find(c => c.name === countryName);
-
-              if (country) {
-                const html = await CountryInfo(country);
-                document.querySelector("main section:nth-child(2)").innerHTML = html;
-              }
-            });
-          });
-
-          savedContainer.querySelectorAll(".delete-btn").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-              const name = e.target.dataset.country;
-              let saved = JSON.parse(localStorage.getItem("savedDestinations")) || [];
-              saved = saved.filter(c => c.name !== name);
-              localStorage.setItem("savedDestinations", JSON.stringify(saved));
-              savedContainer.innerHTML = SavedList(saved);
-            });
-          });
         }
       });
     }
+
+    // ✅ Always initialize photo lightbox after render
+    initPhotoLightbox();
+
   }, 300);
 
   return html;
