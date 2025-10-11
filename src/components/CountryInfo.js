@@ -108,18 +108,14 @@ export default async function CountryInfo(country = null) {
     const infoBtn = document.getElementById("more-info-button");
     if (infoBtn) {
       infoBtn.addEventListener("click", async () => {
-        const { default: CountryMoreInfo } = await import("../pages/CountryMoreInfo.js");
-        const html = await CountryMoreInfo(country.name);
-        document.querySelector("main section:nth-child(2)").innerHTML = html;
+        const newUrl = `/moreinfo/${encodeURIComponent(country.name)}`;
+        history.pushState({}, "", newUrl);
 
-        // ✅ Back button functionality with photo reinit
-        document.getElementById("back-btn").addEventListener("click", async () => {
-          const html = await CountryInfo(country);
-          document.querySelector("main section:nth-child(2)").innerHTML = html;
-          initPhotoLightbox(); // ✅ Rebind lightbox after back
-        });
+        const { handleRouting } = await import("../router.js");
+        handleRouting();
       });
     }
+
 
     // === Save button ===
     const saveBtn = document.getElementById("save-destination-btn");
@@ -154,6 +150,10 @@ export default async function CountryInfo(country = null) {
     initPhotoLightbox();
 
   }, 300);
+    // ✅ Remember last viewed country
+  window.currentCountry = country;
+  localStorage.setItem("lastViewedCountry", JSON.stringify(country));
+
 
   return html;
 }

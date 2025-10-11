@@ -15,5 +15,11 @@ export default function SavedList(saved = []) {
           : `<li class="empty">Empty</li>`
       }
     </ul>
+
+    ${
+      saved.length > 0
+        ? `<button id="clear-list-btn">Clear List</button>`
+        : ""
+    }
   `;
 }

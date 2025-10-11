@@ -1,15 +1,14 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
 
 export default defineConfig({
-  root: '.', // your project root
   server: {
     open: true,
+    historyApiFallback: true, // ✅ Enables SPA-style routing
   },
   build: {
     rollupOptions: {
       input: {
-        main: './index.html',
-        about: './about.html',
+        main: "./index.html",
       },
     },
   },

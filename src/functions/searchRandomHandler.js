@@ -6,7 +6,8 @@ export function setupSearchRandomHandler() {
   document.addEventListener('click', async (e) => {
     // SEARCH HANDLER
     if (e.target.classList.contains('search-btn')) {
-      const query = document.querySelector('.search-box input').value.trim();
+      const input = document.querySelector('.search-box input');
+      const query = input?.value.trim();
       if (!query) return alert("Please enter a country name");
 
       await fetchAndRender(`https://restcountries.com/v3.1/name/${query}?fullText=true`);
@@ -18,8 +19,22 @@ export function setupSearchRandomHandler() {
       await fetchAndRender(`https://restcountries.com/v3.1/region/${region}`, true);
     }
   });
+
+  // ✅ ENTER KEY HANDLER (Delegated)
+  document.addEventListener('keydown', async (e) => {
+    // Ensure the event comes from the search input
+    if (e.target.matches('.search-box input') && e.key === 'Enter') {
+      e.preventDefault();
+
+      const query = e.target.value.trim();
+      if (!query) return alert("Please enter a country name");
+
+      await fetchAndRender(`https://restcountries.com/v3.1/name/${query}?fullText=true`);
+    }
+  });
 }
 
+// === FETCH FUNCTION ===
 async function fetchAndRender(url, random = false) {
   showLoading();
   try {
@@ -43,7 +58,8 @@ async function fetchAndRender(url, random = false) {
     const html = await CountryInfo(info);
     document.querySelector('main section:nth-child(2)').innerHTML = html;
     initPhotoLightbox();
-  } catch {
+  } catch (err) {
+    console.error(err);
     document.querySelector('main section:nth-child(2)').innerHTML = `
       <h2 id="country-info-title">Country Info</h2>
       <div class="country-info"><p style="color:red;">Failed to load country.</p></div>`;

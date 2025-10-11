@@ -358,6 +358,8 @@ footer {
   box-shadow: 0 5px 12px rgba(0,0,0,0.3);
 }
 
+
+
 @media (max-width: 1064px) {
   #back-btn {
     width: 100%;
@@ -636,4 +638,85 @@ header {
 
 .home-link:hover {
   opacity: 0.85;
+}
+
+
+#clear-list-btn {
+  width: 100%;
+  margin-top: 10px;
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.7rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+#clear-list-btn:hover {
+  background: #e04343;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+  transform: translateY(-1px);
+}
+
+.about-footer {
+  display: flex;
+  justify-content: flex-end; /* ✅ push the button to the right */
+  padding-right: 2rem;       /* ✅ add breathing room from edge */
+}
+
+#back-btn {
+  margin: 1rem 0;
+  align-self: center;        /* keep it vertically centered */
+}
+
+@media (max-width: 768px) {
+  .about-footer {
+    justify-content: center;
+    padding-right: 0;
+  }
+}
+
+.nav-link {
+  color: #ffffff;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.25s ease-in-out;
+}
+
+/* 🟡 Simple yellow hover effect */
+.nav-link:hover {
+  color: #ffd700; /* bright golden yellow */
+
+}
+
+
+
+
+#back-btn-more-info {
+  background: #3944bc;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 2rem;           /* Bigger padding */
+  font-size: 1.1rem;            /* Larger text */
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  align-self: flex-end;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+  transition: all 0.25s ease-in-out;
+}
+
+#back-btn-more-info:hover {
+  background: #3039a6;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0,0,0,0.3);
 }

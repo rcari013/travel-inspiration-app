@@ -15,7 +15,7 @@ export default async function CountryMoreInfo(countryName) {
       : "";
 
     return `
-    <button id="back-btn">Back</button>
+    <button id="back-btn-more-info">Back</button>
       <div class="country-more-info">
         
         <h2>${data.title}</h2>

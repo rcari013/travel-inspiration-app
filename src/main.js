@@ -1,43 +1,45 @@
-import './style.css';
-import './photos.css';
-import { renderHome } from './pages/Home.js';
-import { initCountryInfo } from './functions/initCountryInfo.js';
-import { setupSavedListHandler } from './functions/savedListHandler.js';
-import { setupAutosuggest } from './functions/autosuggest.js';
-import { setupSearchRandomHandler } from './functions/searchRandomHandler.js';
-import { initPhotoLightbox } from './functions/initPhotoLightbox.js';
-import { initMapScrollControl } from './functions/initMapScrollControl.js';
-import About from "./pages/About.js";
-import CountryInfo from "./components/CountryInfo.js";
+import "./style.css";
+import "./photos.css";
+import { renderHome } from "./pages/Home.js";
+import { setupSavedListHandler } from "./functions/savedListHandler.js";
+import { setupAutosuggest } from "./functions/autosuggest.js";
+import { setupSearchRandomHandler } from "./functions/searchRandomHandler.js";
+import { initPhotoLightbox } from "./functions/initPhotoLightbox.js";
+import { initMapScrollControl } from "./functions/initMapScrollControl.js";
+import { handleRouting } from "./router.js";
+import { initCountryInfo } from "./functions/initCountryInfo.js"; // ✅ ADD BACK
 
-// === 1. Render base layout ===
-document.querySelector('#app').innerHTML = renderHome();
+document.getElementById("loading-overlay")?.classList.add("hidden");
 
-// === 2. Initialize ===
-await initCountryInfo();
+// === 1. Render Base Layout ===
+document.querySelector("#app").innerHTML = renderHome();
+
+// === 2. Initialize Global UI Features ===
 initPhotoLightbox();
 setupSavedListHandler();
 setupAutosuggest();
 setupSearchRandomHandler();
+initCountryInfo(); // ✅ RESTORE THIS LINE
 
+// === 3. Run Router ===
+handleRouting();
 
-// About navigation
-document.body.addEventListener("click", async (e) => {
+// === 4. Link Handlers ===
+document.body.addEventListener("click", (e) => {
+  // About link
   if (e.target.id === "about-link") {
-    // Replace the entire <main> content with About
-    document.querySelector("main").innerHTML = `
-      <section style="grid-column: 1 / -1;">
-        ${About()}
-      </section>
-    `;
+    e.preventDefault();
+    history.pushState({}, "", "/about");
+    handleRouting();
+  }
+});
 
-    // Back button handler → restore full layout
-    document.getElementById("back-btn").addEventListener("click", async () => {
-      // reload your original layout here
-      window.location.reload(); // simplest way (refreshes entire app)
-      // OR if you prefer without reload:
-      // const html = await CountryInfo();
-      // document.querySelector("main section:nth-child(2)").innerHTML = html;
-    });
+document.addEventListener("click", (e) => {
+  if (e.target.id === "clear-list-btn") {
+    e.preventDefault();
+    if (confirm("Are you sure you want to clear all saved destinations?")) {
+      localStorage.removeItem("savedDestinations");
+      location.reload(); // reload to refresh the UI
+    }
   }
 });
