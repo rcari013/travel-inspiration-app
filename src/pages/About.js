@@ -1,3 +1,5 @@
+import animatedMe from "../img/animated_me.png";
+
 export default function About() {
   return `
     <div class="about-us-container">
@@ -39,9 +41,8 @@ export default function About() {
 
       <section class="about-author">
         <h2>👨‍💻 About the Developer</h2>
-
         <div class="author-profile">
-          <img src="./src/img/animated_me.png" alt="Romelito Carino - Developer" class="author-photo">
+          <img src="${animatedMe}" alt="Romelito Carino - Developer" class="author-photo">
           <div class="author-text">
             <p>
               Hi! I’m <strong>Romelito Bianan Cariño</strong> — the developer behind this app.
