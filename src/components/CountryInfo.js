@@ -14,17 +14,20 @@ export default async function CountryInfo(country = null) {
   }
 
   const photos = await fetchPhotos(country.name);
+
+  const photoHTML = photos
+    .map(
+      (url, i) => `
+        <div class="photo-item">
+          <img src="${url}" alt="${country.name} photo ${i + 1}">
+        </div>
+      `
+    )
+    .join("");
+
   const [lat, lon] = country.latlng || [0, 0];
 
-  const photoHTML = photos.map(
-    (url, i) => `
-      <div class="photo-item">
-        <img src="${url}" alt="${country.name} photo ${i + 1}">
-      </div>
-    `
-  ).join("");
-
-  // === Template ===
+  // === HTML Layout ===
   const html = `
     <h2 id="country-info-title">Country Info</h2>
 
@@ -42,7 +45,9 @@ export default async function CountryInfo(country = null) {
     </div>
 
     <h3 id="photos-title">Photos</h3>
-    <div class="photos">${photoHTML}</div>
+    <div class="photos">
+      ${photoHTML}
+    </div>
 
     <div id="save-button-section">
       <button id="more-info-button" class="info-btn">More Info</button>
@@ -50,7 +55,6 @@ export default async function CountryInfo(country = null) {
     </div>
   `;
 
-  // === DOM Initialization ===
   setTimeout(() => {
     // === Map ===
     if (lat && lon) {
@@ -60,7 +64,8 @@ export default async function CountryInfo(country = null) {
       window._mapInstance = map;
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
       }).addTo(map);
 
       L.marker([lat, lon])
@@ -71,13 +76,36 @@ export default async function CountryInfo(country = null) {
       initMapScrollControl(map);
     }
 
-    // === Flag Display ===
+    // === Flag ===
     const flagContainer = document.querySelector(".flag");
     if (flagContainer) {
       const flagUrl = flagContainer.dataset.flag;
-      flagContainer.style.background = `url(${flagUrl}) center/cover no-repeat`;
-      flagContainer.style.boxShadow = "0 6px 12px rgba(0,0,0,0.25)";
-      flagContainer.style.borderRadius = "6px";
+      flagContainer.innerHTML = "";
+
+      const simpleFlags = ["Japan", "Switzerland", "South Korea", "Bangladesh", "Palau"];
+      const isSimpleFlag = simpleFlags.some((name) =>
+        country.name.toLowerCase().includes(name.toLowerCase())
+      );
+
+      if (isSimpleFlag) {
+        flagContainer.style.background = `url(${flagUrl}) center/cover no-repeat`;
+        flagContainer.style.boxShadow = "0 6px 12px rgba(0, 0, 0, 0.25)";
+        flagContainer.style.borderRadius = "6px";
+      } else {
+        const w = flagContainer.offsetWidth;
+        const sliceWidth = 4;
+        const slices = Math.floor(w / sliceWidth);
+        for (let i = 0; i < slices; i++) {
+          const slice = document.createElement("div");
+          slice.className = "flag-element";
+          slice.style.width = sliceWidth + "px";
+          slice.style.left = i * sliceWidth + "px";
+          slice.style.backgroundImage = `url(${flagUrl})`;
+          slice.style.backgroundPosition = `-${i * sliceWidth}px 0`;
+          slice.style.animationDelay = i * 50 + "ms";
+          flagContainer.appendChild(slice);
+        }
+      }
     }
 
     // === More Info button ===
@@ -86,6 +114,7 @@ export default async function CountryInfo(country = null) {
       infoBtn.addEventListener("click", async () => {
         const newUrl = `/moreinfo/${encodeURIComponent(country.name)}`;
         history.pushState({}, "", newUrl);
+
         const { handleRouting } = await import("../router.js");
         handleRouting();
       });
@@ -94,7 +123,9 @@ export default async function CountryInfo(country = null) {
     // === Save button ===
     const saveBtn = document.getElementById("save-destination-btn");
     if (saveBtn) {
-      saveBtn.addEventListener("click", () => {
+      saveBtn.addEventListener("click", async () => {
+        let saved = JSON.parse(localStorage.getItem("savedDestinations")) || [];
+
         const destination = {
           name: country.name,
           capital: country.capital,
@@ -102,47 +133,33 @@ export default async function CountryInfo(country = null) {
           languages: country.languages,
           flag: country.flag,
           latlng: country.latlng,
-          photos: photos
+          photos: photos,
         };
 
-        let saved = JSON.parse(localStorage.getItem("savedDestinations")) || [];
-
-        // ✅ prevent duplicate save
-        if (!saved.find(item => item.name === country.name)) {
+        if (!saved.find((item) => item.name === country.name)) {
           saved.push(destination);
           localStorage.setItem("savedDestinations", JSON.stringify(saved));
           showSaveOverlay(`${country.name} saved on list`);
         }
 
-        // ✅ refresh SavedList panel
+        // re-render saved list
         const savedContainer = document.getElementById("saved-destinations");
         if (savedContainer) {
           savedContainer.innerHTML = SavedList(saved);
-
-          // rebind delete button
-          savedContainer.querySelectorAll(".delete-btn").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-              const name = e.target.dataset.country;
-              saved = saved.filter(c => c.name !== name);
-              localStorage.setItem("savedDestinations", JSON.stringify(saved));
-              savedContainer.innerHTML = SavedList(saved);
-            });
-          });
         }
       });
     }
 
-    // ✅ Always re-init photo lightbox
+    // ✅ Always initialize photo lightbox after render
     initPhotoLightbox();
-
   }, 300);
 
   // ✅ Remember last viewed country
   window.currentCountry = country;
   localStorage.setItem("lastViewedCountry", JSON.stringify(country));
 
-  // === Overlay helper ===
-  function showSaveOverlay(message = "Saved!") {
+  // === Overlay function ===
+  function showSaveOverlay(message = "Country saved on list") {
     let overlay = document.getElementById("save-overlay");
     if (!overlay) {
       overlay = document.createElement("div");
@@ -151,36 +168,38 @@ export default async function CountryInfo(country = null) {
       document.body.appendChild(overlay);
     }
 
-    overlay.style.cssText = `
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,0.5);
-      opacity: 0;
-      z-index: 9999;
-      transition: opacity 0.3s ease;
-    `;
+    overlay.style.position = "fixed";
+    overlay.style.top = 0;
+    overlay.style.left = 0;
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.background = "rgba(0,0,0,0.5)";
+    overlay.style.display = "flex";
+    overlay.style.alignItems = "center";
+    overlay.style.justifyContent = "center";
+    overlay.style.zIndex = 9999;
+    overlay.style.opacity = "0";
+    overlay.style.transition = "opacity 0.3s ease";
 
     const msg = overlay.querySelector(".save-message");
     msg.textContent = message;
-    msg.style.cssText = `
-      background: rgba(0,0,0,0.7);
-      color: #fff;
-      padding: 1rem 2rem;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 1.2rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    `;
+    msg.style.color = "#fff";
+    msg.style.fontSize = "1.3rem";
+    msg.style.fontWeight = "600";
+    msg.style.background = "rgba(0, 0, 0, 0.6)";
+    msg.style.padding = "1rem 2rem";
+    msg.style.borderRadius = "10px";
+    msg.style.textAlign = "center";
+    msg.style.boxShadow = "0 4px 10px rgba(0,0,0,0.3)";
 
     requestAnimationFrame(() => (overlay.style.opacity = "1"));
 
     setTimeout(() => {
       overlay.style.opacity = "0";
-      setTimeout(() => overlay.remove(), 500);
-    }, 1800);
+      setTimeout(() => {
+        if (overlay && overlay.parentNode) overlay.remove();
+      }, 500);
+    }, 2000);
   }
 
   return html;
