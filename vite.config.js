@@ -1,14 +1,16 @@
 import { defineConfig } from "vite";
+import { resolve } from "path";
 
 export default defineConfig({
   server: {
     open: true,
-    historyApiFallback: true, // ✅ Enables SPA-style routing (useful for / routes)
+    historyApiFallback: true,
   },
   build: {
     rollupOptions: {
       input: {
-        main: "./index.html", // ✅ entry point
+        main: resolve(__dirname, "index.html"),
+        about: resolve(__dirname, "about.html"), // ✅ include about.html in build
       },
     },
   },
