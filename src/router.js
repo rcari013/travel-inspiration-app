@@ -70,3 +70,6 @@ export async function handleRouting() {
 
 // Handle browser navigation (back/forward)
 window.addEventListener("popstate", handleRouting);
+
+// Run once on first page load
+document.addEventListener("DOMContentLoaded", handleRouting);
