@@ -45,20 +45,25 @@ document.addEventListener("click", (e) => {
 });
 
 
-// After rendering home
-document.getElementById("app").innerHTML = renderHome();
-
-// ✅ Intro overlay logic (only once per browser session)
 const overlay = document.getElementById("intro-overlay");
-if (overlay) {
+const app = document.getElementById("app");
+
+if (overlay && app) {
   const shown = sessionStorage.getItem("introShown");
+
   if (!shown) {
     overlay.classList.remove("hidden");
+    app.classList.remove("visible"); // hide app while overlay is shown
+
     setTimeout(() => {
       overlay.classList.add("hidden");
-    }, 3000);
+      app.classList.add("visible"); // fade in app after overlay fades out
+    }, 2500);
+
     sessionStorage.setItem("introShown", "true");
   } else {
     overlay.classList.add("hidden");
+    app.classList.add("visible");
   }
 }
+

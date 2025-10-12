@@ -10,7 +10,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, "index.html"),
-        about: resolve(__dirname, "about.html"), // ✅ include about.html in build
+        about: resolve(__dirname, "about.html"),
       },
     },
   },
