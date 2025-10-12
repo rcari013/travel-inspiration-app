@@ -1,4 +1,5 @@
 import animatedMe from "../img/animated_me.png";
+import realMe from "../img/me.png";
 
 export default function About() {
   return `
@@ -59,7 +60,7 @@ export default function About() {
           <img src="${animatedMe}" alt="Romelito Carino - Developer" class="author-photo">
         </div>
         <div class="flip-back">
-          <img src="./src/img/me.png" alt="Romelito Carino - Real Photo" class="author-photo">
+          <img src="${realMe}" alt="Romelito Carino - Real Photo" class="author-photo">
         </div>
       </div>
     </div>
