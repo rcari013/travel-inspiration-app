@@ -1,5 +1,5 @@
 import "./style.css";      // ✅ main site styles
-import "./photos.css";     // ✅ optional, if you want shared photo styles
+import "./css/photos.css";     // ✅ optional, if you want shared photo styles
 
 import About from "./pages/About.js";
 import Header from "./components/Header.js";

@@ -40,23 +40,45 @@ export default function About() {
       </section>
 
       <section class="about-author">
-        <h2>👨‍💻 About the Developer</h2>
-        <div class="author-profile">
+  <h2 id="about-developer-title">👨‍💻 About the Developer</h2>
+
+  <!-- 🟢 Animated SVG Hover Tip -->
+  <div class="hover-tip">
+  <p>Hover over the picture!</p>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="arrow-down">
+      <path fill="none" stroke="#1e90ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+        d="M12 4v16m0 0l-6-6m6 6l6-6" />
+    </svg>
+    
+  </div>
+
+  <div class="author-profile">
+    <div class="author-photo-flip">
+      <div class="flip-inner">
+        <div class="flip-front">
           <img src="${animatedMe}" alt="Romelito Carino - Developer" class="author-photo">
-          <div class="author-text">
-            <p>
-              Hi! I’m <strong>Romelito Bianan Cariño</strong> — the developer behind this app.
-              I’m a passionate web developer from the Philippines, currently studying web development at BYU–Idaho through BYU–Pathway Worldwide.
-            </p>
-            <p>
-              This project reflects my goal of blending design, interactivity, and data-driven content to create meaningful web experiences.
-            </p>
-            <p class="credits">
-              Built with ❤️ using <em>JavaScript (ES Modules)</em>, <em>Vite</em>, <em>Leaflet</em>, and <em>Unsplash API</em>.
-            </p>
-          </div>
         </div>
-      </section>
+        <div class="flip-back">
+          <img src="./src/img/me.png" alt="Romelito Carino - Real Photo" class="author-photo">
+        </div>
+      </div>
+    </div>
+
+    <div class="author-text">
+      <p>
+        Hi! I’m <strong>Romelito Bianan Cariño</strong> — the developer behind this app.
+        I’m a passionate web developer from the Philippines, currently studying web development at BYU–Idaho through BYU–Pathway Worldwide.
+      </p>
+      <p>
+        This project reflects my goal of blending design, interactivity, and data-driven content to create meaningful web experiences.
+      </p>
+      <p class="credits">
+        Built with ❤️ using <em>JavaScript (ES Modules)</em>, <em>Vite</em>, <em>Leaflet</em>, and <em>Unsplash API</em>.
+      </p>
+    </div>
+  </div>
+</section>
+
 
       <div class="about-footer">
         <button id="back-btn">← Back to App</button>

@@ -1,0 +1,225 @@
+/* === ABOUT PAGE STYLES === */
+
+.about-us-container {
+  background: #f5f9ff;
+  padding: 2rem;
+  border-radius: 10px;
+  min-height: calc(100vh - 160px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.about-hero, .about-content, .about-author {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+
+.about-hero h1 {
+  color: #1e90ff;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.about-hero .intro {
+  text-align: center;
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.feature-box {
+  background: #eef3ff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.feature-box h3 {
+  color: #3944bc;
+}
+
+/* === Developer Section === */
+.author-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.author-photo {
+  width: 280px;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.author-text {
+  max-width: 720px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  line-height: 1.9;
+  color: #333;
+}
+
+.about-author h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #1e90ff;
+  font-size: 1.6rem;
+}
+
+/* === Flip Effect === */
+.author-photo-flip {
+  width: 280px;
+  margin: 0 auto;
+  perspective: 1000px;
+  position: relative;
+  display: block;
+}
+
+.flip-inner {
+  position: relative;
+  width: 100%;
+  transition: transform 0.8s ease;
+  transform-style: preserve-3d;
+  border: 4px solid #3944bc;
+  border-radius: 16px;
+}
+
+.author-photo-flip:hover .flip-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-front,
+.flip-back {
+  width: 100%;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.flip-front img,
+.flip-back img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+
+.flip-back {
+  transform: rotateY(180deg);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+@media (max-width: 768px) {
+  .author-photo-flip {
+    width: 65%;
+    max-width: 240px;
+  }
+}
+
+/* === Hover Tip === */
+.hover-tip {
+  text-align: center;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  animation: fadeIn 1.5s ease forwards;
+}
+
+.hover-tip p {
+  font-size: 1rem;
+  color: #1e90ff;
+  font-weight: 600;
+  margin: 0;
+}
+
+.arrow-down {
+  width: 28px;
+  height: 28px;
+  animation: bounceDown 1.6s infinite;
+}
+
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.author-photo-flip:hover ~ .hover-tip .arrow-down path {
+  stroke: #3944bc;
+}
+
+.about-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 2rem;
+}
+
+#back-btn {
+  margin: 1rem 0;
+  align-self: center;
+}
+
+@media (max-width: 768px) {
+  .about-footer {
+    justify-content: center;
+    padding-right: 0;
+  }
+}
+
+#about-developer-title {
+  margin-bottom: 20px;
+}
+
+/* === BACK TO APP BUTTON === */
+#back-btn {
+  background: #3944bc;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 2rem;         /* Bigger padding */
+  font-size: 1.1rem;          /* Larger text */
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  align-self: flex-end;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+  transition: all 0.25s ease-in-out;
+}
+
+#back-btn:hover {
+  background: #3039a6;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 1064px) {
+  #back-btn {
+    width: 100%;
+  }
+}

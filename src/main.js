@@ -1,5 +1,5 @@
 import "./style.css";
-import "./photos.css";
+import "./css/photos.css";
 import { renderHome } from "./pages/Home.js";
 import { setupSavedListHandler } from "./functions/savedListHandler.js";
 import { setupAutosuggest } from "./functions/autosuggest.js";
@@ -43,3 +43,22 @@ document.addEventListener("click", (e) => {
     }
   }
 });
+
+
+// After rendering home
+document.getElementById("app").innerHTML = renderHome();
+
+// ✅ Intro overlay logic (only once per browser session)
+const overlay = document.getElementById("intro-overlay");
+if (overlay) {
+  const shown = sessionStorage.getItem("introShown");
+  if (!shown) {
+    overlay.classList.remove("hidden");
+    setTimeout(() => {
+      overlay.classList.add("hidden");
+    }, 3000);
+    sessionStorage.setItem("introShown", "true");
+  } else {
+    overlay.classList.add("hidden");
+  }
+}

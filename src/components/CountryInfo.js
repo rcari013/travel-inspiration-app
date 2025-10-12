@@ -50,7 +50,7 @@ export default async function CountryInfo(country = null) {
     </div>
 
     <div id="save-button-section">
-      <button id="more-info-button" class="info-btn">More Info</button>
+      <button id="more-info-button" class="info-btn">More Info / Latest News</button>
       <button id="save-destination-btn">Save On Destination List</button>
     </div>
   `;
