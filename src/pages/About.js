@@ -74,7 +74,7 @@ export default function About() {
         This project reflects my goal of blending design, interactivity, and data-driven content to create meaningful web experiences.
       </p>
       <p class="credits">
-        Built with ❤️ using <em>JavaScript (ES Modules)</em>, <em>Vite</em>, <em>Leaflet</em>, and <em>Unsplash API</em>.
+        Built with ❤️ using <em>JavaScript (ES Modules)</em>, <em>Vite</em>, <em>Leaflet</em>, <em>Wikipedia API</em>, <em>RestCountries</em>, <em>Gnews</em> and <em>Unsplash API</em>.
       </p>
     </div>
   </div>
