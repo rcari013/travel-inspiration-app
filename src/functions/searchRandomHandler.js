@@ -35,7 +35,6 @@ export function setupSearchRandomHandler() {
   const searchInput = document.querySelector(".search-box input");
   if (searchInput) {
     searchInput.addEventListener("blur", async () => {
-      // wait a bit for Chrome to finalize the selected suggestion
       setTimeout(async () => {
         const query = searchInput.value.trim();
         if (query.length > 1) {
