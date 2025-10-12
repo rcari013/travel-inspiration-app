@@ -10,6 +10,10 @@ export async function handleRouting() {
   const rightPanel = document.querySelector("main section:nth-child(2)");
   if (!rightPanel) return;
 
+  const overlay = document.getElementById("intro-overlay");
+  const app = document.getElementById("app");
+
+  // === HOME PAGE ===
   if (path === "/" || path === "/index.html") {
     // 🩵 Try to restore last viewed country
     const last = localStorage.getItem("lastViewedCountry");
@@ -25,16 +29,35 @@ export async function handleRouting() {
 
     const html = await CountryInfo(country);
     rightPanel.innerHTML = html;
+
+    // ✅ Show intro overlay only on home
+    if (overlay && app) {
+      const shown = sessionStorage.getItem("introShown");
+      if (!shown) {
+        overlay.classList.remove("hidden");
+        app.classList.remove("visible");
+        setTimeout(() => {
+          overlay.classList.add("hidden");
+          app.classList.add("visible");
+        }, 2500);
+        sessionStorage.setItem("introShown", "true");
+      } else {
+        overlay.classList.add("hidden");
+        app.classList.add("visible");
+      }
+    }
   }
 
-
-  // === More Info page ===
+  // === MORE INFO PAGE ===
   else if (path.startsWith("/moreinfo/")) {
     const countryName = decodeURIComponent(path.split("/moreinfo/")[1]);
     const html = await CountryMoreInfo(countryName);
     rightPanel.innerHTML = html;
 
-    // Back button → return to home view
+    // ✅ Ensure app is visible immediately (no overlay)
+    if (app) app.classList.add("visible");
+    if (overlay) overlay.classList.add("hidden");
+
     const backBtn = document.getElementById("back-btn-more-info");
     if (backBtn) {
       backBtn.addEventListener("click", () => {
@@ -44,11 +67,15 @@ export async function handleRouting() {
     }
   }
 
-  // === About page ===
+  // === ABOUT PAGE ===
   else if (path === "/about") {
     const html = About();
     rightPanel.innerHTML = html;
 
+    // ✅ Ensure app is visible immediately (no overlay)
+    if (app) app.classList.add("visible");
+    if (overlay) overlay.classList.add("hidden");
+
     const backBtn = document.getElementById("back-btn-more-info");
     if (backBtn) {
       backBtn.addEventListener("click", () => {
@@ -58,13 +85,15 @@ export async function handleRouting() {
     }
   }
 
-  // === 404 Fallback ===
+  // === 404 FALLBACK ===
   else {
     rightPanel.innerHTML = `
       <section style="grid-column: 1 / -1;">
         <h2>Page not found</h2>
       </section>
     `;
+    if (app) app.classList.add("visible");
+    if (overlay) overlay.classList.add("hidden");
   }
 }
 

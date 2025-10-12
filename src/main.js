@@ -9,6 +9,9 @@ import { initMapScrollControl } from "./functions/initMapScrollControl.js";
 import { handleRouting } from "./router.js";
 import { initCountryInfo } from "./functions/initCountryInfo.js"; // ✅ ADD BACK
 
+
+
+
 document.getElementById("loading-overlay")?.classList.add("hidden");
 
 // === 1. Render Base Layout ===
