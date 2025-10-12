@@ -1,5 +1,4 @@
 const UNSPLASH_ACCESS_KEY = "D6hYVCDCP0Wm3CK_l-xc0-ZnCo96kzQvRvl_tLojXHM"; 
-// ⚠️ keep this in .env later for security
 
 export async function fetchPhotos(query) {
   try {

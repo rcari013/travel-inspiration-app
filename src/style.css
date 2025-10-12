@@ -32,7 +32,6 @@ header {
   align-items: center;
 }
 
-/* Header Links & Buttons */
 .home-link {
   color: white;
   text-decoration: none;
@@ -196,7 +195,6 @@ h2 {
   border-radius: 6px;
 }
 
-/* === FLAG ANIMATION === */
 .flag {
   width: 180px;
   height: 110px;
@@ -411,14 +409,14 @@ footer {
   background: #f0f0f0;
 }
 
-
+/* === BACK BUTTON === */
 #back-btn-more-info {
   background: #3944bc;
   color: white;
   border: none;
   border-radius: 8px;
-  padding: 1rem 2rem;         /* Bigger padding */
-  font-size: 1.1rem;          /* Larger text */
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
   margin-bottom: 1.5rem;
@@ -426,28 +424,25 @@ footer {
   box-shadow: 0 3px 8px rgba(0,0,0,0.25);
   transition: all 0.25s ease-in-out;
 }
-
 #back-btn-more-info:hover {
   background: #3039a6;
   transform: translateY(-2px);
   box-shadow: 0 5px 12px rgba(0,0,0,0.3);
 }
 
+/* === COUNTRY NEWS === */
 .country-news {
   margin-top: 1.5rem;
 }
-
 .country-news h3 {
   margin-bottom: 1rem;
   color: #1e90ff;
 }
-
 .news-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
 }
-
 .news-card {
   background: #fff;
   border-radius: 10px;
@@ -455,35 +450,29 @@ footer {
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
   transition: transform 0.2s;
 }
-
 .news-card:hover {
   transform: scale(1.02);
 }
-
 .news-card img {
   width: 100%;
   height: 150px;
   object-fit: cover;
 }
-
 .news-card h4 {
   font-size: 1rem;
   margin: 0.5rem 1rem;
 }
-
 .news-card p {
   font-size: 0.9rem;
   color: #555;
   margin: 0 1rem 0.5rem;
 }
-
 .news-card .source {
   font-size: 0.8rem;
   color: #888;
   display: block;
   margin: 0 1rem 1rem;
 }
-
 
 /* === INTRO OVERLAY === */
 .intro-overlay {
@@ -502,42 +491,34 @@ footer {
   opacity: 1;
   transition: opacity 1s ease, visibility 1s ease;
 }
-
 .intro-overlay.hidden {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
-
 .intro-content {
   text-align: center;
   animation: floatIn 1.5s ease forwards;
 }
-
 .intro-content h1 {
   font-size: 2rem;
   margin: 1rem 0 0.5rem;
   font-weight: 700;
   letter-spacing: 1px;
 }
-
 .intro-content p {
   font-size: 1.1rem;
   opacity: 0.9;
 }
-
 .intro-icon {
   font-size: 3rem;
   animation: spinGlobe 2s ease-in-out infinite alternate;
 }
-
 @keyframes spinGlobe {
   0% { transform: rotate(0deg) scale(1); }
   100% { transform: rotate(15deg) scale(1.1); }
 }
-
 @keyframes floatIn {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
 }
-

@@ -1,5 +1,5 @@
-import "./style.css";      // main site styles
-import "./css/photos.css"; // optional shared styles
+import "./style.css";
+import "./css/photos.css";
 
 import About from "./pages/About.js";
 import Header from "./components/Header.js";
@@ -13,6 +13,6 @@ document.querySelector("#app").innerHTML = `
 
 document.addEventListener("click", (e) => {
   if (e.target && e.target.id === "back-btn") {
-    window.location.href = "/"; // back to home
+    window.location.href = "/";
   }
 });

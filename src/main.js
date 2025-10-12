@@ -11,9 +11,6 @@ import { initMapScrollControl } from "./functions/initMapScrollControl.js";
 import { handleRouting } from "./router.js";
 import { initCountryInfo } from "./functions/initCountryInfo.js"; 
 
-
-
-
 document.getElementById("loading-overlay")?.classList.add("hidden");
 
 // === 1. Render Base Layout ===
@@ -45,7 +42,7 @@ document.addEventListener("click", (e) => {
     e.preventDefault();
     if (confirm("Are you sure you want to clear all saved destinations?")) {
       localStorage.removeItem("savedDestinations");
-      location.reload(); // reload to refresh the UI
+      location.reload();
     }
   }
 });

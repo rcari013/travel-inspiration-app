@@ -2,7 +2,7 @@ import Header from '../components/Header.js';
 import Footer from '../components/Footer.js';
 import SearchBox from '../components/SearchBox.js';
 import SavedList from '../components/SavedList.js';
-import CountryInfo from '../components/CountryInfo.js';
+
 
 export function renderHome() {
   // 🔹 Load saved destinations from localStorage
