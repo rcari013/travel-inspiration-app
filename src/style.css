@@ -541,33 +541,3 @@ footer {
   to { opacity: 1; transform: translateY(0); }
 }
 
-
-#app {
-  opacity: 0;
-  transition: opacity 0.8s ease-in-out;
-}
-
-#app.visible {
-  opacity: 1;
-}
-
-.intro-overlay {
-  position: fixed;
-  inset: 0;
-  background: #1e90ff;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  transition: opacity 0.8s ease-in-out;
-}
-
-.intro-overlay.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
-
-

@@ -1,5 +1,7 @@
 import "./style.css";
 import "./css/photos.css";
+import "./css/introOverlay.css";
+import { initIntroOverlay } from "./functions/introOverlay.js";
 import { renderHome } from "./pages/Home.js";
 import { setupSavedListHandler } from "./functions/savedListHandler.js";
 import { setupAutosuggest } from "./functions/autosuggest.js";
@@ -23,6 +25,7 @@ setupSavedListHandler();
 setupAutosuggest();
 setupSearchRandomHandler();
 initCountryInfo(); // ✅ RESTORE THIS LINE
+initIntroOverlay();
 
 // === 3. Run Router ===
 handleRouting();
@@ -46,27 +49,4 @@ document.addEventListener("click", (e) => {
     }
   }
 });
-
-
-const overlay = document.getElementById("intro-overlay");
-const app = document.getElementById("app");
-
-if (overlay && app) {
-  const shown = sessionStorage.getItem("introShown");
-
-  if (!shown) {
-    overlay.classList.remove("hidden");
-    app.classList.remove("visible"); // hide app while overlay is shown
-
-    setTimeout(() => {
-      overlay.classList.add("hidden");
-      app.classList.add("visible"); // fade in app after overlay fades out
-    }, 2500);
-
-    sessionStorage.setItem("introShown", "true");
-  } else {
-    overlay.classList.add("hidden");
-    app.classList.add("visible");
-  }
-}
 

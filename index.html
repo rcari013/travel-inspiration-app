@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Travel Inspiration App</title>
+
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet/dist/leaflet.css"
@@ -11,21 +12,21 @@
 </head>
 <body>
 
-  <!-- ✅ Place overlay INSIDE body, BEFORE #app -->
+
   <div id="loading-overlay" class="loading-overlay hidden" style="display:none;">
     <div class="spinner"></div>
     <p>Searching...</p>
   </div>
 
-
-    <!-- 🌍 Intro overlay -->
-<div id="intro-overlay" class="intro-overlay hidden">
+  <div id="intro-overlay" class="intro-overlay">
   <div class="intro-content">
     <div class="intro-icon">🌍</div>
     <h1>Travel Inspiration App</h1>
     <p>Discover new destinations from your screen</p>
   </div>
 </div>
+
+
 
   <div id="app"></div>
 
