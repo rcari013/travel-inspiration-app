@@ -1,3 +1,3 @@
 export default function Footer() {
-  return `<footer>Data provided by RestCountries, Unsplash, and Wikipedia</footer>`;
+  return `<footer>Data provided by RestCountries, Unsplash, Gnews, and Wikipedia</footer>`;
 }

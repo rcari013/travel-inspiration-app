@@ -9,7 +9,7 @@ import { setupSearchRandomHandler } from "./functions/searchRandomHandler.js";
 import { initPhotoLightbox } from "./functions/initPhotoLightbox.js";
 import { initMapScrollControl } from "./functions/initMapScrollControl.js";
 import { handleRouting } from "./router.js";
-import { initCountryInfo } from "./functions/initCountryInfo.js"; // ✅ ADD BACK
+import { initCountryInfo } from "./functions/initCountryInfo.js"; 
 
 
 
